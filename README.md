@@ -28,8 +28,27 @@ PonderV2 is a comprehensive 3D pre-training framework designed to facilitate the
     <img src="assets/pipeline.png" alt="pipeline" width="800" />
 </p>
 
-## Highlights:
+## News:
+- *Nov. 2023*: [**Model files**](./ponder/models/ponder/) are released! Usage instructions, complete codes and checkpoints are coming soon!
 - *Oct. 2023*: **PonderV2** is released on [arXiv](https://arxiv.org/abs/2310.08586), code will be made public and supported by [Pointcept](https://github.com/Pointcept/Pointcept) soon.
+
+## Example Usage:
+Pre-train PonderV2 on single Structured3D dataset with 8 GPUs:
+```bash
+bash scripts/train.sh -g 8 -d s3dis -c pretrain-ponder-spunet-v1m1-0-base -n ponderv2-pretrain
+```
+
+More detailed instructions on installation, data pre-processing, pre-training and finetuning will come soon!
+
+For more outdoor pre-training and downstream information, you can also refer to [UniPAD](https://github.com/Nightmare-n/UniPAD). 
+
+## Todo:
+- [ ] add instructions on installation and usage
+- [ ] add ScanNet w. RGB-D dataloader and data pre-processing scripts
+- [ ] add multi-dataset loader and trainer
+- [ ] add multi-dataset point prompt training model
+- [ ] add more pre-training and finetuning scripts
+- [ ] add pre-trained checkpoints
 
 ## Citation
 ```bib
