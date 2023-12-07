@@ -52,13 +52,11 @@ For more outdoor pre-training and downstream information, you can also refer to 
 
 ## Citation
 ```bib
-@misc{zhu2023ponderv2,
-      title={PonderV2: Pave the Way for 3D Foundation Model with A Universal Pre-training Paradigm}, 
-      author={Haoyi Zhu and Honghui Yang and Xiaoyang Wu and Di Huang and Sha Zhang and Xianglong He and Tong He and Hengshuang Zhao and Chunhua Shen and Yu Qiao and Wanli Ouyang},
-      year={2023},
-      eprint={2310.08586},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV}
+@article{zhu2023ponderv2,
+  title={PonderV2: Pave the Way for 3D Foundation Model with A Universal Pre-training Paradigm}, 
+  author={Haoyi Zhu and Honghui Yang and Xiaoyang Wu and Di Huang and Sha Zhang and Xianglong He and Tong He and Hengshuang Zhao and Chunhua Shen and Yu Qiao and Wanli Ouyang},
+  journal={arXiv preprint arXiv:2310.08586},
+  year={2023}
 }
 
 @inproceedings{huang2023ponder,
@@ -69,12 +67,10 @@ For more outdoor pre-training and downstream information, you can also refer to 
   year={2023}
 }
 
-@misc{yang2023unipad,
-      title={UniPAD: A Universal Pre-training Paradigm for Autonomous Driving}, 
-      author={Honghui Yang and Sha Zhang and Di Huang and Xiaoyang Wu and Haoyi Zhu and Tong He and Shixiang Tang and Hengshuang Zhao and Qibo Qiu and Binbin Lin and Xiaofei He and Wanli Ouyang},
-      year={2023},
-      eprint={2310.08370},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV}
+@article{yang2023unipad,
+  title={UniPAD: A Universal Pre-training Paradigm for Autonomous Driving}, 
+  author={Honghui Yang and Sha Zhang and Di Huang and Xiaoyang Wu and Haoyi Zhu and Tong He and Shixiang Tang and Hengshuang Zhao and Qibo Qiu and Binbin Lin and Xiaofei He and Wanli Ouyang},
+  journal={arXiv preprint arXiv:2310.08370},
+  year={2023},
 }
 ```
