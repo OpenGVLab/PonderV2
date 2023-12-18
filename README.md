@@ -29,25 +29,94 @@ PonderV2 is a comprehensive 3D pre-training framework designed to facilitate the
 </p>
 
 ## News:
+- *Dec. 2023*: Multi-dataset training supported! More instructions on installation and usage are available. Please check out!
 - *Nov. 2023*: [**Model files**](./ponder/models/ponder/) are released! Usage instructions, complete codes and checkpoints are coming soon!
 - *Oct. 2023*: **PonderV2** is released on [arXiv](https://arxiv.org/abs/2310.08586), code will be made public and supported by [Pointcept](https://github.com/Pointcept/Pointcept) soon.
 
-## Example Usage:
-Pre-train PonderV2 on single Structured3D dataset with 8 GPUs:
+## Installation
+This repository is mainly based on [Pointcept](https://github.com/Pointcept/Pointcept).
+
+### Requirements
+- Ubuntu: 18.04 or higher
+- CUDA: 11.3 or higher
+- PyTorch: 1.10.0 or higher
+
+### Conda Environment
 ```bash
-bash scripts/train.sh -g 8 -d s3dis -c pretrain-ponder-spunet-v1m1-0-base -n ponderv2-pretrain
+conda create -n ponderv2 python=3.8 -y
+conda activate ponderv2
+# Choose version you want here: https://pytorch.org/get-started/previous-versions/
+conda install pytorch==1.12.1 torchvision==0.13.1 torchaudio==0.12.1 cudatoolkit=11.3 -c pytorch -y
+conda install h5py pyyaml -c anaconda -y
+conda install sharedarray tensorboard tensorboardx addict einops scipy plyfile termcolor timm -c conda-forge -y
+conda install pytorch-cluster pytorch-scatter pytorch-sparse -c pyg -y
+pip install torch-geometric yapf==0.40.1 opencv-python open3d==0.10.0 imageio
+pip install git+https://github.com/openai/CLIP.git
+
+# spconv (SparseUNet)
+# refer https://github.com/traveller59/spconv
+pip install spconv-cu113
+
+# NeuS renderer
+cd libs/smooth-sampler
+# usual
+python setup.py install
+# docker & multi GPU arch
+TORCH_CUDA_ARCH_LIST="ARCH LIST" python setup.py install
+# e.g. 7.5: RTX 3000; 8.0: a100 More available in: https://developer.nvidia.com/cuda-gpus
+TORCH_CUDA_ARCH_LIST="7.5 8.0" python setup.py install
+cd ../..
 ```
 
-More detailed instructions on installation, data pre-processing, pre-training and finetuning will come soon!
+## Data Preparation
+Please check out [docs/data_preparation.md](docs/data_preparation.md)
+
+## Quick Start:
+- **Pretraining**: Pretrain PonderV2 on indoor or outdoor datasets.
+
+Pre-train PonderV2 (indoor) on single ScanNet dataset with 8 GPUs:
+```bash
+# -g: number of GPUs
+# -d: dataset
+# -c: config file, the final config is ./config/${-d}/${-c}.py
+# -n: experiment name
+bash scripts/train.sh -g 8 -d scannet -c pretrain-ponder-spunet-v1m1-0-base -n ponderv2-pretrain-sc
+```
+
+Pre-train PonderV2 (indoor) on ScanNet, S3DIS and Structured3D datasets using [Point Prompt Training (PPT)](https://arxiv.org/abs/2308.09718) with 8 GPUs:
+```bash
+bash scripts/train.sh -g 8 -d scannet -c pretrain-ponder-ppt-v1m1-0-sc-s3-st-spunet -n ponderv2-pretrain-sc-s3-st
+```
+
+Pre-train PonderV2 (outdoor) on single nuScenes dataset with 4 GPUs:
+```bash
+bash scripts/train.sh -g 4 -d nuscenes -c pretrain-ponder-spunet-v1m1-0-base -n ponderv2-pretrain-nu
+```
+
+- **Finetuning**: Finetune on downstream tasks with PonderV2 pre-trained checkpoints.
+
+Finetune PonderV2 on ScanNet semantic segmentation downstream task with PPT:
+```bash
+# -w: path to checkpoint
+bash scripts/train.sh -g 8 -d scannet -c semseg-ppt-v1m1-0-sc-s3-st-spunet-lovasz-ft -n ponderv2-semseg-ft -w ${PATH/TO/CHECKPOINT}
+```
+
+- **Testing**: Test a finetuned model on a downstream task.
+```bash
+# Based on experiment folder created by training script
+bash scripts/test.sh -g 8 -d scannet -n ponderv2-semseg-ft -w ${CHECKPOINT/NAME}
+```
+
+For more detailed options and examples, please refer to [docs/getting_started.md](docs/getting_started.md).
 
 For more outdoor pre-training and downstream information, you can also refer to [UniPAD](https://github.com/Nightmare-n/UniPAD). 
 
 ## Todo:
-- [ ] add instructions on installation and usage
-- [ ] add ScanNet w. RGB-D dataloader and data pre-processing scripts
-- [ ] add multi-dataset loader and trainer
-- [ ] add multi-dataset point prompt training model
-- [ ] add more pre-training and finetuning scripts
+- [x] add instructions on installation and usage
+- [x] add ScanNet w. RGB-D dataloader and data pre-processing scripts
+- [x] add multi-dataset loader and trainer
+- [x] add multi-dataset point prompt training model
+- [ ] add more pre-training and finetuning configs
 - [ ] add pre-trained checkpoints
 
 ## Citation
@@ -74,3 +143,8 @@ For more outdoor pre-training and downstream information, you can also refer to 
   year={2023},
 }
 ```
+
+## Acknowledgement
+This project is mainly based on the following codebases. Thanks for their great works!
+- [SDFStudio](https://github.com/autonomousvision/sdfstudio)
+- [Pointcept](https://github.com/Pointcept/Pointcept)

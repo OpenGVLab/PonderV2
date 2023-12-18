@@ -76,7 +76,7 @@ class Structured3DRGBDDataset(Structured3DDataset):
         filtered_data_list = []
         for data_path in data_list:
             rgbd_paths = glob.glob(
-                os.path.join(data_path.split(".pth")[0], "rgbd", "*.pth")
+                os.path.join(data_path.split(".pth")[0] + "_rgbd", "*.pth")
             )
             if len(rgbd_paths) <= 0:
                 # print(f"{data_path} has no rgbd data.")
@@ -111,16 +111,9 @@ class Structured3DRGBDDataset(Structured3DDataset):
         )
         rgbd_dicts = [torch.load(p) for p in rgbd_paths]
 
-        has_bad = False
         for i in range(len(rgbd_dicts)):
             if (rgbd_dicts[i]["depth_mask"]).mean() < 0.25:
-                print(
-                    f"{rgbd_paths[i]} has bad depth data. ({rgbd_dicts[i]['depth_mask'].mean()})"
-                )
-                os.rename(rgbd_paths[i], rgbd_paths[i] + ".bad")
-                has_bad = True
-        if has_bad:
-            return self.get_data(idx)
+                return self.get_data(idx)
 
         for d in rgbd_dicts:
             d["extrinsic"] = np.array(

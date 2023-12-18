@@ -289,3 +289,21 @@ class Trainer(TrainerBase):
     def build_scaler(self):
         scaler = torch.cuda.amp.GradScaler() if self.cfg.enable_amp else None
         return scaler
+
+
+@TRAINERS.register_module("MultiDatasetTrainer")
+class MultiDatasetTrainer(Trainer):
+    def build_train_loader(self):
+        from ponder.datasets import MultiDatasetDataloader
+
+        train_data = build_dataset(self.cfg.data.train)
+        train_loader = MultiDatasetDataloader(
+            train_data,
+            self.cfg.batch_size_per_gpu,
+            self.cfg.num_worker_per_gpu,
+            self.cfg.mix_prob,
+            self.cfg.seed,
+            max_point=self.cfg.get("max_point", -1),
+        )
+        self.comm_info["iter_per_epoch"] = len(train_loader)
+        return train_loader

@@ -29,6 +29,8 @@ class PonderIndoor(nn.Module):
         val_ray_split=10240,
         ray_nsample=128,
         padding=0.1,
+        backbone_out_channels=96,
+        context_channels=256,
         pool_type="mean",
         share_volume=True,
         render_semantic=False,  # whether to render 2D semantic maps.
@@ -37,6 +39,8 @@ class PonderIndoor(nn.Module):
         clip_model=None,
         class_name=None,
         valid_index=None,
+        ppt_loss_weight=0.0,  # whether and how much to use PPT's loss
+        ppt_criteria=None,
     ):
         super().__init__()
         self.grid_shape = (
@@ -66,8 +70,19 @@ class PonderIndoor(nn.Module):
         self.render_semantic = render_semantic
         self.conditions = conditions
         self.valid_index = valid_index
+        self.embedding_table = nn.Embedding(len(conditions), context_channels)
+        self.backbone_out_channels = backbone_out_channels
         if render_semantic:
+            self.ppt_loss_weight = ppt_loss_weight
             self.load_semantic(template, clip_model, class_name)
+        else:
+            self.ppt_loss_weight = (
+                0.0  # ppt loss is not available when render_semantic is `False`
+            )
+
+        if self.ppt_loss_weight > 0:
+            assert ppt_criteria is not None, "Please provide PPT's loss function."
+            self.ppt_criteria = build_criteria(ppt_criteria)
 
     def load_semantic(self, template, clip_model, class_name):
         import clip
@@ -95,6 +110,11 @@ class PonderIndoor(nn.Module):
                 dim=-1, keepdim=True
             )
         self.register_buffer("class_embedding", class_embedding.float().cpu())
+        self.logit_scale = clip_model.logit_scale
+        if self.ppt_loss_weight > 0:
+            self.proj_head = nn.Linear(
+                self.backbone_out_channels, clip_model.text_projection.shape[1]
+            )
 
         del clip_model, class_prompt, class_token
         torch.cuda.empty_cache()
@@ -142,6 +162,16 @@ class PonderIndoor(nn.Module):
             grid_mask = torch.gather(block_mask, 0, inverse_indices)
             feat[~grid_mask] = self.mtoken
             data_dict["feat"] = feat
+
+        if "condition" in data_dict:
+            condition = data_dict["condition"][0]
+            assert condition in self.conditions
+            context = self.embedding_table(
+                torch.tensor(
+                    [self.conditions.index(condition)], device=data_dict["coord"].device
+                )
+            )
+            data_dict["context"] = context
 
         data_dict["sparse_backbone_feat"] = self.backbone(data_dict)
         return data_dict
@@ -642,6 +672,19 @@ class PonderIndoor(nn.Module):
         loss = sum(_value for _key, _value in loss_dict.items() if "loss" in _key)
         return loss, loss_dict
 
+    def ppt_loss(self, data_dict):
+        feat = self.proj_head(data_dict["sparse_backbone_feat"])
+        feat = feat / feat.norm(dim=-1, keepdim=True)
+        sim = (
+            feat
+            @ self.class_embedding[
+                self.valid_index[self.conditions.index(data_dict["condition"][0])], :
+            ].t()
+        )
+        logit_scale = self.logit_scale.exp()
+        seg_logits = logit_scale * sim
+        return self.ppt_criteria(seg_logits, data_dict["segment"])
+
     def forward(self, data_dict):
         data_dict = self.extract_feature(data_dict)
         ray_dict, data_dict = self.prepare_ray(data_dict)
@@ -649,4 +692,9 @@ class PonderIndoor(nn.Module):
         render_out = self.render_func(ray_dict, volume_feature)
         loss, loss_dict = self.render_loss(render_out, ray_dict)
         out_dict = dict(loss=loss, **loss_dict)
+
+        if self.ppt_loss_weight > 0:
+            ppt_loss = self.ppt_loss(data_dict)
+            out_dict["ppt_loss"] = ppt_loss
+
         return out_dict

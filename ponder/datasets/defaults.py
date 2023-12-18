@@ -138,3 +138,42 @@ class DefaultDataset(Dataset):
 
     def __len__(self):
         return len(self.data_list) * self.loop
+
+
+@DATASETS.register_module()
+class ConcatDataset(Dataset):
+    def __init__(self, datasets, loop=1):
+        super(ConcatDataset, self).__init__()
+        self.datasets = [build_dataset(dataset) for dataset in datasets]
+        self.loop = loop
+        self.data_list = self.get_data_list()
+        logger = get_root_logger()
+        logger.info(
+            "Totally {} x {} samples in the concat set.".format(
+                len(self.data_list), self.loop
+            )
+        )
+
+    def get_data_list(self):
+        data_list = []
+        for i in range(len(self.datasets)):
+            data_list.extend(
+                zip(
+                    np.ones(len(self.datasets[i])) * i, np.arange(len(self.datasets[i]))
+                )
+            )
+        return data_list
+
+    def get_data(self, idx):
+        dataset_idx, data_idx = self.data_list[idx % len(self.data_list)]
+        return self.datasets[dataset_idx][data_idx]
+
+    def get_data_name(self, idx):
+        dataset_idx, data_idx = self.data_list[idx % len(self.data_list)]
+        return self.datasets[dataset_idx].get_data_name(data_idx)
+
+    def __getitem__(self, idx):
+        return self.get_data(idx)
+
+    def __len__(self):
+        return len(self.data_list) * self.loop

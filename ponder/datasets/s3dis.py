@@ -196,7 +196,7 @@ class S3DISRGBDDataset(S3DISDataset):
         filtered_data_list = []
         for data_path in data_list:
             rgbd_paths = glob.glob(
-                os.path.join(data_path.split(".pth")[0], "rgbd", "*.pth")
+                os.path.join(data_path.split(".pth")[0] + "_rgbd", "*.pth")
             )
             if len(rgbd_paths) <= 0:
                 # print(f"{data_path} has no rgbd data.")
@@ -205,7 +205,7 @@ class S3DISRGBDDataset(S3DISDataset):
         print(
             f"Finish filtering! Totally {len(filtered_data_list)} from {len(data_list)} data."
         )
-        return data_list
+        return filtered_data_list
 
     def get_data(self, idx):
         data_path = self.data_list[idx % len(self.data_list)]
@@ -226,20 +226,14 @@ class S3DISRGBDDataset(S3DISDataset):
             print(f"{data_path} has no rgbd data.")
             return self.get_data(np.random.randint(0, self.__len__()))
 
-        # if self.num_cameras > len(rgbd_paths):
-        #     print(f"Warning: {data_path.split('.pth')[0]} has only {len(rgbd_paths)} frames, but {self.num_cameras} cameras are required.")
         rgbd_paths = np.random.choice(
             rgbd_paths, self.num_cameras, replace=self.num_cameras > len(rgbd_paths)
         )
         rgbd_dicts = [torch.load(p) for p in rgbd_paths]
 
-        has_bad = False
         for i in range(len(rgbd_dicts)):
             if (rgbd_dicts[i]["depth_mask"]).mean() < 0.25:
-                os.rename(rgbd_paths[i], rgbd_paths[i] + ".bad")
-                has_bad = True
-        if has_bad:
-            return self.get_data(idx)
+                return self.get_data(idx)
 
         name = (
             os.path.basename(self.data_list[idx % len(self.data_list)])
