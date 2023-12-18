@@ -29,6 +29,7 @@ PonderV2 is a comprehensive 3D pre-training framework designed to facilitate the
 </p>
 
 ## News:
+- *Dec. 2023*: **Checkpoint weights** are available in [model zoo](docs/model_zoo.md)!
 - *Dec. 2023*: **Multi-dataset training** supported! **More instructions** on installation and usage are available. Please check out!
 - *Nov. 2023*: [**Model files**](./ponder/models/ponder/) are released! Usage instructions, complete codes and checkpoints are coming soon!
 - *Oct. 2023*: **PonderV2** is released on [arXiv](https://arxiv.org/abs/2310.08586), code will be made public and supported by [Pointcept](https://github.com/Pointcept/Pointcept) soon.
@@ -68,8 +69,20 @@ TORCH_CUDA_ARCH_LIST="7.5 8.0" python setup.py install
 cd ../..
 ```
 
+If you want to run instance segmentation downstream tasks with [PointGroup](https://github.com/dvlab-research/PointGroup), you should also run the following:
+```bash
+conda install -c bioconda google-sparsehash 
+cd libs/pointgroup_ops
+python setup.py install --include_dirs=${CONDA_PREFIX}/include
+cd ../..
+```
+Then uncomment `# from .point_group import *` in `ponder/models/__init__.py`.
+
 ## Data Preparation
-Please check out [docs/data_preparation.md](docs/data_preparation.md)
+Please check out [docs/data_preparation.md](docs/data_preparation.md).
+
+## Model Zoo
+Please check out [docs/model_zoo.md](docs/model_zoo.md).
 
 ## Quick Start:
 - **Pretraining**: Pretrain PonderV2 on indoor or outdoor datasets.
@@ -106,6 +119,7 @@ bash scripts/train.sh -g 8 -d scannet -c semseg-ppt-v1m1-0-sc-s3-st-spunet-lovas
 # Based on experiment folder created by training script
 bash scripts/test.sh -g 8 -d scannet -n ponderv2-semseg-ft -w ${CHECKPOINT/NAME}
 ```
+You can download our trained checkpoint weights in [docs/model_zoo.md](docs/model_zoo.md).
 
 For more detailed options and examples, please refer to [docs/getting_started.md](docs/getting_started.md).
 
@@ -116,8 +130,8 @@ For more outdoor pre-training and downstream information, you can also refer to 
 - [x] add ScanNet w. RGB-D dataloader and data pre-processing scripts
 - [x] add multi-dataset loader and trainer
 - [x] add multi-dataset point prompt training model
-- [ ] add more pre-training and finetuning configs
-- [ ] add pre-trained checkpoints
+- [x] add more pre-training and finetuning configs
+- [x] add pre-trained checkpoints
 
 ## Citation
 ```bib

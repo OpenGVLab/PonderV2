@@ -158,3 +158,4 @@ exp/
 data/
 .cache/
 data
+*.pth

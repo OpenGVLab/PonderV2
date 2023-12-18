@@ -2,7 +2,7 @@
 
 ### ScanNet v2
 
-The preprocessing support semantic and instance segmentation for both ScanNet20, ScanNet200 and ScanNet Data Efficient.
+The preprocessing support semantic and instance segmentation for both `ScanNet20`, `ScanNet200` and `ScanNet Data Efficient`.
 
 - Download the [ScanNet](http://www.scan-net.org/) v2 dataset.
 - Run preprocessing code for raw ScanNet as follows:
@@ -10,7 +10,7 @@ The preprocessing support semantic and instance segmentation for both ScanNet20,
 # RAW_SCANNET_DIR: the directory of downloaded ScanNet v2 raw dataset.
 # PROCESSED_SCANNET_DIR: the directory of processed ScanNet dataset (output dir).
 python ponder/datasets/preprocessing/scannet/preprocess_scannet.py --dataset_root ${RAW_SCANNET_DIR} --output_root ${PROCESSED_SCANNET_DIR}
-# extract RGB-D iamges and 2D semantic labels:
+# extract RGB-D iamges and 2D semantic labels (ScanNet20 only):
 python ponder/datasets/preprocessing/scannet/reader.py --scans_path ${RAW_SCANNET_DIR}/scans --output_path ${PROCESSED_SCANNET_DIR}/rgbd --export_depth_images --export_color_images --export_poses --export_intrinsics --export_label
 ```
 
