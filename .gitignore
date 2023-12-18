@@ -157,3 +157,4 @@ configs/local/default.yaml
 exp/
 data/
 .cache/
+data

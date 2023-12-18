@@ -554,7 +554,7 @@ data = dict(
                 loop=1,  # sampling weight
             ),
         ],
-    )
+    ),
 )
 
 hooks = [

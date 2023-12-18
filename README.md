@@ -29,7 +29,7 @@ PonderV2 is a comprehensive 3D pre-training framework designed to facilitate the
 </p>
 
 ## News:
-- *Dec. 2023*: Multi-dataset training supported! More instructions on installation and usage are available. Please check out!
+- *Dec. 2023*: **Multi-dataset training** supported! **More instructions** on installation and usage are available. Please check out!
 - *Nov. 2023*: [**Model files**](./ponder/models/ponder/) are released! Usage instructions, complete codes and checkpoints are coming soon!
 - *Oct. 2023*: **PonderV2** is released on [arXiv](https://arxiv.org/abs/2310.08586), code will be made public and supported by [Pointcept](https://github.com/Pointcept/Pointcept) soon.
 
