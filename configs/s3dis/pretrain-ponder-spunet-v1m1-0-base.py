@@ -55,6 +55,8 @@ model = dict(
             volume_type="default",
             padding_mode="zeros",
             share_volume=True,
+            norm_pts=True,
+            norm_padding=0.1,
         ),
         collider=dict(
             type="AABBBoxCollider",

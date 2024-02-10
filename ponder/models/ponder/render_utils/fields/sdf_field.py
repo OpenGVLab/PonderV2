@@ -55,6 +55,25 @@ class SingleVarianceNetwork(nn.Module):
         return torch.exp(self.variance * 10.0).clip(1e-6, 1e6)
 
 
+def normalize_3d_coordinate(p, padding=0.1):
+    """Normalize coordinate to [0, 1] for unit cube experiments.
+        Corresponds to our 3D model
+
+    Args:
+        p (tensor): point
+        padding (float): conventional padding paramter of ONet for unit cube, so [-0.5, 0.5] -> [-0.55, 0.55]
+    """
+
+    p_nor = p / (1 + padding + 10e-4)  # (-0.5, 0.5)
+    p_nor = p_nor + 0.5  # range (0, 1)
+    # f there are outliers out of the range
+    if p_nor.max() >= 1:
+        p_nor[p_nor >= 1] = 1 - 10e-4
+    if p_nor.min() < 0:
+        p_nor[p_nor < 0] = 0.0
+    return p_nor
+
+
 @FIELDS.register_module()
 class SDFField(nn.Module):
     def __init__(
@@ -67,6 +86,8 @@ class SDFField(nn.Module):
         share_volume=True,
         rgb_decoder=None,
         semantic_decoder=None,
+        norm_pts=False,
+        norm_padding=0.1,
     ):
         super().__init__()
         self.beta_init = beta_init
@@ -90,6 +111,9 @@ class SDFField(nn.Module):
         self.deviation_network = SingleVarianceNetwork(init_val=self.beta_init)
 
         self._cos_anneal_ratio = 1.0
+
+        self.norm_pts = norm_pts
+        self.norm_padding = norm_padding
 
     def set_cos_anneal_ratio(self, anneal):
         """Set the anneal value for the proposal network."""
@@ -194,6 +218,8 @@ class SDFField(nn.Module):
         points = (
             ray_samples.frustums.get_start_positions()
         )  # (num_rays, num_samples, 3)
+        if self.norm_pts:
+            points = normalize_3d_coordinate(points, self.norm_padding)
 
         points.requires_grad_(True)
         with torch.enable_grad():
