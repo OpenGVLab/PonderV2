@@ -557,6 +557,14 @@ class PonderIndoor(nn.Module):
                 ray_o = ray_o[pixels_y, pixels_x, :]
                 ray_d = ray_d[pixels_y, pixels_x, :]
 
+                # convert plane-to-plane depth to point-to-point depth
+                cam2lidar = torch.linalg.inv(RT)
+                plane_dir = (
+                    cam2lidar @ torch.FloatTensor([0, 0, 1, 1]).to(RT.device)[:, None]
+                )[:3, 0] - ray_o[0]
+                plane_dir = plane_dir / torch.linalg.norm(plane_dir)
+                depth = depth / torch.linalg.multi_dot((ray_d, plane_dir))
+
                 mask_at_box = torch.from_numpy(
                     self.get_mask_at_box(ray_o.cpu().numpy(), ray_d.cpu().numpy())
                 ).to(ray_o.device)
