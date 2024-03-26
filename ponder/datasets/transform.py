@@ -334,9 +334,11 @@ class RaySample(object):
             i_mask_idx = np.nonzero(proj_mask[i])[0]
             point_nsample = min(
                 len(i_mask_idx),
-                int(len(i_mask_idx) * self.point_ratio)
-                if self.point_nsample is None
-                else self.point_nsample,
+                (
+                    int(len(i_mask_idx) * self.point_ratio)
+                    if self.point_nsample is None
+                    else self.point_nsample
+                ),
             )
             if point_nsample == 0:
                 continue

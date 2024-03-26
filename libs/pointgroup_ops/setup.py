@@ -1,8 +1,9 @@
 import os
+from distutils.sysconfig import get_config_vars
 from sys import argv
+
 from setuptools import setup
 from torch.utils.cpp_extension import BuildExtension, CUDAExtension
-from distutils.sysconfig import get_config_vars
 
 (opt,) = get_config_vars("OPT")
 os.environ["OPT"] = " ".join(

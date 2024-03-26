@@ -1,6 +1,6 @@
+import pointgroup_ops_cuda
 import torch
 from torch.autograd import Function
-import pointgroup_ops_cuda
 
 
 class BallQueryBatchP(Function):

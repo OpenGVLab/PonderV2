@@ -187,9 +187,11 @@ class SDFField(nn.Module):
         point_features = self.feature_sampling(points, volume_feature)
         h = self.sdf_decoder(
             points,
-            point_features
-            if self.share_volume
-            else torch.chunk(point_features, 2, dim=-1)[0],
+            (
+                point_features
+                if self.share_volume
+                else torch.chunk(point_features, 2, dim=-1)[0]
+            ),
         )
         sdf, geo_features = h[..., :1], h[..., 1:]
         return sdf, geo_features, point_features
@@ -241,9 +243,11 @@ class SDFField(nn.Module):
         directions = ray_samples.frustums.directions  # (num_rays, num_samples, 3)
         rgb_inputs.extend(
             [
-                point_features
-                if self.share_volume
-                else torch.chunk(point_features, 2, dim=-1)[1],
+                (
+                    point_features
+                    if self.share_volume
+                    else torch.chunk(point_features, 2, dim=-1)[1]
+                ),
                 geo_features,
                 directions,
             ]

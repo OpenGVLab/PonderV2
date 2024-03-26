@@ -4,6 +4,7 @@ Point Prompt Training
 Author: Xiaoyang Wu (xiaoyang.wu.cs@gmail.com)
 Please cite our work if the code is helpful to you.
 """
+
 from collections import OrderedDict
 from collections.abc import Sequence
 from functools import partial

@@ -1,1 +1,1 @@
-from .functions import bfs_cluster, ballquery_batch_p, Clustering
+from .functions import Clustering, ballquery_batch_p, bfs_cluster

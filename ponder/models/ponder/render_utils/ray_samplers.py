@@ -402,9 +402,9 @@ class NeuSSampler(Sampler):
             )
 
             if output_dict.get("new_sampled_points", None) is None:
-                output_dict[
-                    "new_sampled_points"
-                ] = new_samples.frustums.get_start_positions()
+                output_dict["new_sampled_points"] = (
+                    new_samples.frustums.get_start_positions()
+                )
             else:
                 output_dict["new_sampled_points"] = torch.cat(
                     [
@@ -586,9 +586,9 @@ class ErrorBoundedSampler(Sampler):
                 ray_samples = self.pdf_sampler(
                     ray_bundle, ray_samples, weights, num_samples=self.num_samples
                 )
-                output_dict[
-                    "new_sampled_points"
-                ] = ray_samples.frustums.get_start_positions()
+                output_dict["new_sampled_points"] = (
+                    ray_samples.frustums.get_start_positions()
+                )
 
         # Add extra samples uniformly
         if self.num_samples_extra > 0:
@@ -660,9 +660,7 @@ class ErrorBoundedSampler(Sampler):
             dim=-1,
         )
 
-        error_per_section = (
-            torch.exp(-d_star / beta) * (deltas**2.0) / (4 * beta**2)
-        )
+        error_per_section = torch.exp(-d_star / beta) * (deltas**2.0) / (4 * beta**2)
         error_integral = torch.cumsum(error_per_section, dim=-1)
         bound_opacity = (
             torch.clamp(torch.exp(error_integral), max=1.0e6) - 1.0
