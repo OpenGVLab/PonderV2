@@ -32,7 +32,6 @@ class PonderIndoor(nn.Module):
         backbone_out_channels=96,
         context_channels=256,
         pool_type="mean",
-        share_volume=True,
         render_semantic=False,  # whether to render 2D semantic maps.
         conditions=None,
         template=None,
@@ -50,7 +49,6 @@ class PonderIndoor(nn.Module):
         self.pool_type = pool_type
         self.val_ray_split = val_ray_split
         self.ray_nsample = ray_nsample
-        self.share_volume = share_volume
         self.mask = mask
 
         self.bounds = [

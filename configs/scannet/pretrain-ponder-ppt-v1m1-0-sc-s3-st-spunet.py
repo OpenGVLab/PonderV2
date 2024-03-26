@@ -9,7 +9,7 @@ num_worker = 16 * num_gpu
 
 mix_prob = 0.0
 empty_cache = True
-enable_amp = True
+enable_amp = False
 evaluate = False
 find_unused_parameters = True
 
@@ -46,28 +46,31 @@ model = dict(
         field=dict(
             type="SDFField",
             sdf_decoder=dict(
-                in_dim=128,
+                in_dim=64,
                 out_dim=65,  # 64 + 1
                 hidden_size=128,
                 n_blocks=1,
+                points_factor=0.0,
             ),
             rgb_decoder=dict(
-                in_dim=198,  # 128 + 64 + 3 + 3
+                in_dim=134,  # 64 + 64 + 3 + 3
                 out_dim=3,
                 hidden_size=128,
                 n_blocks=0,
+                points_factor=0.0,
             ),
             semantic_decoder=dict(
-                in_dim=195,  # 128 + 64 + 3, no directions
+                in_dim=131,  # 64 + 64 + 3, no directions
                 out_dim=512,
                 hidden_size=128,
                 n_blocks=0,
+                points_factor=0.0,
             ),
             beta_init=0.3,
             use_gradient=True,
             volume_type="default",
             padding_mode="zeros",
-            share_volume=True,
+            share_volume=False,
             norm_pts=True,
             norm_padding=0.1,
         ),
@@ -108,7 +111,6 @@ model = dict(
     backbone_out_channels=96,
     context_channels=256,
     pool_type="mean",
-    share_volume=True,
     render_semantic=True,
     conditions=("Structured3D", "ScanNet", "S3DIS"),
     template=(

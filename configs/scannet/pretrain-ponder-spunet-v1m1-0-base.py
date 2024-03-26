@@ -33,28 +33,33 @@ model = dict(
         field=dict(
             type="SDFField",
             sdf_decoder=dict(
-                in_dim=128,
+                in_dim=64,
                 out_dim=65,  # 64 + 1
                 hidden_size=128,
                 n_blocks=1,
+                pos_enc=False,
+                points_factor=0.0,
             ),
             rgb_decoder=dict(
-                in_dim=198,  # 128 + 64 + 3 + 3
+                in_dim=134,  # 64 + 64 + 3 + 3
                 out_dim=3,
                 hidden_size=128,
                 n_blocks=0,
+                pos_enc=False,
+                points_factor=0.0,
             ),
             semantic_decoder=dict(
-                in_dim=195,  # 128 + 64 + 3, no directions
+                in_dim=131,  # 64 + 64 + 3, no directions
                 out_dim=512,
                 hidden_size=128,
                 n_blocks=0,
+                points_factor=0.0,
             ),
             beta_init=0.3,
             use_gradient=True,
             volume_type="default",
             padding_mode="zeros",
-            share_volume=True,
+            share_volume=False,
             norm_pts=True,
             norm_padding=0.1,
         ),
@@ -93,7 +98,6 @@ model = dict(
     ray_nsample=256,
     padding=0.1,
     pool_type="mean",
-    share_volume=True,
     render_semantic=True,
     conditions=("ScanNet",),
     template=(
@@ -146,10 +150,10 @@ model = dict(
 )
 
 # scheduler settings
-epoch = 800
+epoch = 2000
 optimizer = dict(
     type="SGD",
-    lr=0.0001 * batch_size / 8,
+    lr=0.0005 * batch_size / 8,
     momentum=0.9,
     weight_decay=0.0001,
     nesterov=True,
@@ -288,7 +292,7 @@ data = dict(
             ),
         ],
         test_mode=False,
-        loop=1,  # sampling weight
+        loop=2,  # sampling weight
     ),
 )
 

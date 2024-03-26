@@ -4,7 +4,9 @@ import torch.nn as nn
 
 
 class SDFDecoder(nn.Module):
-    def __init__(self, in_dim, out_dim, hidden_size=256, n_blocks=5, **kwargs):
+    def __init__(
+        self, in_dim, out_dim, hidden_size=256, n_blocks=5, points_factor=1.0, **kwargs
+    ):
         super().__init__()
 
         dims = [hidden_size] + [hidden_size for _ in range(n_blocks)] + [out_dim]
@@ -21,8 +23,10 @@ class SDFDecoder(nn.Module):
 
         self.activation = nn.Softplus(beta=100)
 
+        self.points_factor = points_factor
+
     def forward(self, points, point_feats):
-        x = self.fc_p(points)
+        x = self.fc_p(points) * self.points_factor
         for l in range(self.num_layers - 1):
             x = x + self.fc_c[l](point_feats)
             lin = getattr(self, "lin" + str(l))
@@ -33,7 +37,15 @@ class SDFDecoder(nn.Module):
 
 
 class RGBDecoder(nn.Module):
-    def __init__(self, in_dim, out_dim=3, hidden_size=256, n_blocks=5, **kwargs):
+    def __init__(
+        self,
+        in_dim,
+        out_dim=3,
+        hidden_size=256,
+        n_blocks=5,
+        points_factor=1.0,
+        **kwargs
+    ):
         super().__init__()
 
         dims = [hidden_size] + [hidden_size for _ in range(n_blocks)] + [out_dim]
@@ -50,8 +62,10 @@ class RGBDecoder(nn.Module):
         )
         self.activation = nn.ReLU()
 
+        self.points_factor = points_factor
+
     def forward(self, points, point_feats):
-        x = self.fc_p(points)
+        x = self.fc_p(points) * self.points_factor
         for l in range(self.num_layers - 1):
             x = x + self.fc_c[l](point_feats)
             lin = getattr(self, "lin" + str(l))
@@ -63,7 +77,9 @@ class RGBDecoder(nn.Module):
 
 
 class SemanticDecoder(nn.Module):
-    def __init__(self, in_dim, out_dim, hidden_size=256, n_blocks=5, **kwargs):
+    def __init__(
+        self, in_dim, out_dim, hidden_size=256, n_blocks=5, points_factor=1.0, **kwargs
+    ):
         super().__init__()
 
         dims = [hidden_size] + [hidden_size for _ in range(n_blocks)] + [out_dim]
@@ -80,8 +96,10 @@ class SemanticDecoder(nn.Module):
         )
         self.activation = nn.ReLU()
 
+        self.points_factor = points_factor
+
     def forward(self, points, point_feats):
-        x = self.fc_p(points)
+        x = self.fc_p(points) * self.points_factor
         for l in range(self.num_layers - 1):
             x = x + self.fc_c[l](point_feats)
             lin = getattr(self, "lin" + str(l))
