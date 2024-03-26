@@ -206,7 +206,7 @@ model = dict(
         (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 15, 20, 22, 24, 25, 27, 34),
         (0, 1, 4, 5, 6, 7, 8, 10, 19, 29, 30, 31, 32),
     ),
-    ppt_loss_weight=0.0,
+    ppt_loss_weight=1.0,
     ppt_criteria=[dict(type="CrossEntropyLoss", loss_weight=1.0, ignore_index=-1)],
 )
 

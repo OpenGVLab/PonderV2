@@ -38,7 +38,7 @@ class PonderIndoor(nn.Module):
         clip_model=None,
         class_name=None,
         valid_index=None,
-        ppt_loss_weight=0.0,  # whether and how much to use PPT's loss
+        ppt_loss_weight=1.0,  # whether and how much to use PPT's loss
         ppt_criteria=None,
     ):
         super().__init__()
