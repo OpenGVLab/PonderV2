@@ -115,14 +115,6 @@ class Structured3DRGBDDataset(Structured3DDataset):
             if (rgbd_dicts[i]["depth_mask"]).mean() < 0.25:
                 return self.get_data(idx)
 
-        for d in rgbd_dicts:
-            d["extrinsic"] = np.array(
-                [[1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]]
-            ) @ np.linalg.inv(
-                np.array([[0, 0, 1, 0], [0, -1, 0, 0], [1, 0, 0, 0], [0, 0, 0, 1]])
-                @ np.linalg.inv(d["extrinsic"])
-            )
-
         data_dict = dict(
             coord=coord,
             normal=normal,

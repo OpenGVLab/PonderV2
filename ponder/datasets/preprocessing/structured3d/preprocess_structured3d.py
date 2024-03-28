@@ -255,10 +255,22 @@ def parse_scene(
                     if parse_rgbd or plugin_rgbd:
                         depth = depth[:, :, 0]
                         extrinsic = np.eye(4)
-                        extrinsic[:3, :3] = np.linalg.inv(
-                            np.array([[0, 0, 1], [0, -1, 0], [1, 0, 0]]) @ cam_r
-                        )
+                        extrinsic[:3, :3] = cam_r
                         extrinsic[:3, 3] = cam_t
+                        extrinsic = np.array(
+                            [[1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 0, 1]]
+                        ) @ np.linalg.inv(
+                            np.array(
+                                [
+                                    [0, 0, 1, 0],
+                                    [0, -1, 0, 0],
+                                    [1, 0, 0, 0],
+                                    [0, 0, 0, 1],
+                                ]
+                            )
+                            @ np.linalg.inv(extrinsic)
+                        )
+
                         semantic_map = (
                             np.ones_like(depth, dtype=np.int64) * ignore_index
                         )
