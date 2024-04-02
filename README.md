@@ -4,7 +4,7 @@
 
 [Haoyi Zhu](https://www.haoyizhu.site/)<sup>1,4*</sup>, [Honghui Yang](https://github.com/Nightmare-n)<sup>1,3*</sup>, [Xiaoyang Wu](https://xywu.me/)<sup>1,2*</sup>, [Di Huang](https://github.com/dihuangdh)<sup>1*</sup>, [Sha Zhang](https://github.com/zhangsha1024)<sup>1,4</sup>, [Xianglong He](https://scholar.google.com/citations?hl=zh-CN&user=jKFeol0AAAAJ)<sup>1</sup>,
 <br>
-[Tong He](http://tonghe90.github.io/)<sup>1</sup>, [Hengshuang Zhao](https://hszhao.github.io/)<sup>2</sup>, [Chunhua Shen](https://cshen.github.io/)<sup>3</sup>, [Yu Qiao](https://mmlab.siat.ac.cn/yuqiao/)<sup>1</sup>, [Wanli Ouyang](https://wlouyang.github.io/)<sup>1</sup>
+[Hengshuang Zhao](https://hszhao.github.io/)<sup>2</sup>, [Chunhua Shen](https://cshen.github.io/)<sup>3</sup>, [Yu Qiao](https://mmlab.siat.ac.cn/yuqiao/)<sup>1</sup>, [Tong He](http://tonghe90.github.io/)<sup>1</sup>, [Wanli Ouyang](https://wlouyang.github.io/)<sup>1</sup>
  
 <sup>1</sup>[Shanghai AI Lab](https://www.shlab.org.cn/), <sup>2</sup>[HKU](https://www.hku.hk/), <sup>3</sup>[ZJU](https://www.zju.edu.cn/), <sup>4</sup>[USTC](https://en.ustc.edu.cn/) 
 
