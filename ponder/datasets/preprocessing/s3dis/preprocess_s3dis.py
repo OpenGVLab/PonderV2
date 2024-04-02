@@ -238,94 +238,98 @@ def parse_room(
                     )
                 )
                 for pose_path in pose_paths:
-                    uuid, _, pitch_level, yaw_position = (
-                        os.path.basename(pose_path).split(".")[0].split("_")
-                    )
-                    intrinsic_path = os.path.join(
-                        raw_root,
-                        f"area_{area_index}",
-                        "raw",
-                        f"{uuid}_intrinsics_{pitch_level}.txt",
-                    )
-                    h, w, fx, fy, cx, cy, k1, k2, p1, p2, k3 = np.loadtxt(
-                        intrinsic_path
-                    )
-                    intrinsic = np.array([[fx, 0, cx], [0, fy, cy], [0, 0, 1]])
-                    pose = np.loadtxt(pose_path)
-
-                    if area_index == "5b":
-                        pose = (
-                            np.array(
-                                [
-                                    [0, 1, 0, -4.09703582],
-                                    [-1, 0, 0, 6.22617759],
-                                    [0, 0, 1, 0],
-                                    [0, 0, 0, 1],
-                                ]
-                            )
-                            @ pose
+                    try:
+                        uuid, _, pitch_level, yaw_position = (
+                            os.path.basename(pose_path).split(".")[0].split("_")
                         )
-                    if align_angle:
-                        S_1 = np.eye(4)
-                        S_2 = np.eye(4)
-                        S_3 = np.eye(4)
-                        S_1[:3, 3] = -room_center
-                        S_2[:3, :3] = rot_t
-                        S_3[:3, 3] = room_center
-                        S = S_3 @ S_2 @ S_1
-                        pose = S @ pose
+                        intrinsic_path = os.path.join(
+                            raw_root,
+                            f"area_{area_index}",
+                            "raw",
+                            f"{uuid}_intrinsics_{pitch_level}.txt",
+                        )
+                        h, w, fx, fy, cx, cy, k1, k2, p1, p2, k3 = np.loadtxt(
+                            intrinsic_path
+                        )
+                        intrinsic = np.array([[fx, 0, cx], [0, fy, cy], [0, 0, 1]])
+                        pose = np.loadtxt(pose_path)
 
-                    rgb = cv2.cvtColor(
-                        cv2.imread(
+                        if area_index == "5b":
+                            pose = (
+                                np.array(
+                                    [
+                                        [0, 1, 0, -4.09703582],
+                                        [-1, 0, 0, 6.22617759],
+                                        [0, 0, 1, 0],
+                                        [0, 0, 0, 1],
+                                    ]
+                                )
+                                @ pose
+                            )
+                        if align_angle:
+                            S_1 = np.eye(4)
+                            S_2 = np.eye(4)
+                            S_3 = np.eye(4)
+                            S_1[:3, 3] = -room_center
+                            S_2[:3, :3] = rot_t
+                            S_3[:3, 3] = room_center
+                            S = S_3 @ S_2 @ S_1
+                            pose = S @ pose
+
+                        rgb = cv2.cvtColor(
+                            cv2.imread(
+                                os.path.join(
+                                    raw_root,
+                                    f"area_{area_index}",
+                                    "raw",
+                                    f"{uuid}_i{pitch_level}_{yaw_position}.jpg",
+                                )
+                            ),
+                            cv2.COLOR_BGR2RGB,
+                        )
+                        depth = cv2.imread(
                             os.path.join(
                                 raw_root,
                                 f"area_{area_index}",
                                 "raw",
-                                f"{uuid}_i{pitch_level}_{yaw_position}.jpg",
-                            )
-                        ),
-                        cv2.COLOR_BGR2RGB,
-                    )
-                    depth = cv2.imread(
-                        os.path.join(
-                            raw_root,
-                            f"area_{area_index}",
-                            "raw",
-                            f"{uuid}_d{pitch_level}_{yaw_position}.png",
-                        ),
-                        cv2.IMREAD_UNCHANGED,
-                    )
-                    undistorted_rgb = cv2.undistort(
-                        rgb, intrinsic, np.array([k1, k2, p1, p2, k3])
-                    )
-                    undistorted_depth = cv2.undistort(
-                        depth, intrinsic, np.array([k1, k2, p1, p2, k3])
-                    )
-                    depth_mask, semantic_map = unproject_filtering_depths(
-                        undistorted_depth.astype(float),
-                        intrinsic,
-                        pose,
-                        depth_scale=4000.0,
-                        room_coords=room_coords,
-                        room_semantic=room_semantic_gt,
-                    )
+                                f"{uuid}_d{pitch_level}_{yaw_position}.png",
+                            ),
+                            cv2.IMREAD_UNCHANGED,
+                        )
+                        undistorted_rgb = cv2.undistort(
+                            rgb, intrinsic, np.array([k1, k2, p1, p2, k3])
+                        )
+                        undistorted_depth = cv2.undistort(
+                            depth, intrinsic, np.array([k1, k2, p1, p2, k3])
+                        )
+                        depth_mask, semantic_map = unproject_filtering_depths(
+                            undistorted_depth.astype(float),
+                            intrinsic,
+                            pose,
+                            depth_scale=4000.0,
+                            room_coords=room_coords,
+                            room_semantic=room_semantic_gt,
+                        )
 
-                    rgbd_dict = dict(
-                        intrinsic=intrinsic,
-                        extrinsic=pose,
-                        rgb=undistorted_rgb,
-                        depth=undistorted_depth,
-                        depth_mask=depth_mask,
-                        semantic_map=semantic_map,
-                    )
+                        rgbd_dict = dict(
+                            intrinsic=intrinsic,
+                            extrinsic=pose,
+                            rgb=undistorted_rgb,
+                            depth=undistorted_depth,
+                            depth_mask=depth_mask,
+                            semantic_map=semantic_map,
+                        )
 
-                    rgbd_save_path = os.path.join(
-                        output_root,
-                        f"{room}_rgbd",
-                        f"{uuid}_{pitch_level}_{yaw_position}.pth",
-                    )
-                    os.makedirs(os.path.dirname(rgbd_save_path), exist_ok=True)
-                    torch.save(rgbd_dict, rgbd_save_path)
+                        rgbd_save_path = os.path.join(
+                            output_root,
+                            f"{room}_rgbd",
+                            f"{uuid}_{pitch_level}_{yaw_position}.pth",
+                        )
+                        os.makedirs(os.path.dirname(rgbd_save_path), exist_ok=True)
+                        torch.save(rgbd_dict, rgbd_save_path)
+                    except Exception as e:
+                        print(f"Skip {pose_path}. Error: {e}")
+                        continue
 
 
 def main_process():
@@ -394,7 +398,11 @@ def main_process():
                     args.raw_root, "area_{}".format(i), "3d", "rgb.obj"
                 )
                 mesh = open3d.io.read_triangle_mesh(mesh_dir)
-                mesh.triangle_uvs.clear()
+                if hasattr(mesh.triangle_uvs, "clear"):
+                    mesh.triangle_uvs.clear()
+                else:  # for open3d <= 0.10.0
+                    for _ in range(len(mesh.triangle_uvs)):
+                        tmp = mesh.triangle_uvs.pop()
             else:
                 mesh_a_dir = os.path.join(
                     args.raw_root, "area_{}a".format(i), "3d", "rgb.obj"
@@ -403,9 +411,20 @@ def main_process():
                     args.raw_root, "area_{}b".format(i), "3d", "rgb.obj"
                 )
                 mesh_a = open3d.io.read_triangle_mesh(mesh_a_dir)
-                mesh_a.triangle_uvs.clear()
+
+                if hasattr(mesh_a.triangle_uvs, "clear"):
+                    mesh_a.triangle_uvs.clear()
+                else:  # for open3d <= 0.10.0
+                    for _ in range(len(mesh_a.triangle_uvs)):
+                        tmp = mesh_a.triangle_uvs.pop()
+
                 mesh_b = open3d.io.read_triangle_mesh(mesh_b_dir)
-                mesh_b.triangle_uvs.clear()
+                if hasattr(mesh_b.triangle_uvs, "clear"):
+                    mesh_b.triangle_uvs.clear()
+                else:  # for open3d <= 0.10.0
+                    for _ in range(len(mesh_b.triangle_uvs)):
+                        tmp = mesh_b.triangle_uvs.pop()
+
                 mesh_b = mesh_b.transform(
                     np.array(
                         [
@@ -416,7 +435,14 @@ def main_process():
                         ]
                     )
                 )
-                mesh = mesh_a + mesh_b
+                try:
+                    mesh = mesh_a + mesh_b
+                except:  # for open3d <= 0.10.0
+                    mesh = open3d.geometry.TriangleMesh(
+                        mesh_a.vertices, mesh_a.triangles
+                    ) + open3d.geometry.TriangleMesh(mesh_b.vertices, mesh_b.triangles)
+                    mesh.compute_vertex_normals()
+
             area_mesh_dict["Area_{}".format(i)] = mesh
             print("Area_{} mesh is loaded".format(i))
 

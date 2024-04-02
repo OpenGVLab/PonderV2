@@ -1,7 +1,7 @@
 _base_ = ["../_base_/default_runtime.py"]
 
 num_gpu = 8
-limit_num_coord = 2000000
+max_point = 2000000
 
 # misc custom setting
 batch_size = 8 * num_gpu  # bs: total bs in all gpus

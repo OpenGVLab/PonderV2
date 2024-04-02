@@ -1236,9 +1236,10 @@ class SphereCrop(object):
             data_part_list = []
             # coord_list, color_list, dist2_list, idx_list, offset_list = [], [], [], [], []
             if data_dict["coord"].shape[0] > point_max:
-                coord_p, idx_uni = np.random.rand(
-                    data_dict["coord"].shape[0]
-                ) * 1e-3, np.array([])
+                coord_p, idx_uni = (
+                    np.random.rand(data_dict["coord"].shape[0]) * 1e-3,
+                    np.array([]),
+                )
                 while idx_uni.size != data_dict["index"].shape[0]:
                     init_idx = np.argmin(coord_p)
                     dist2 = np.sum(
