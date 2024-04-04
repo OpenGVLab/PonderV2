@@ -35,8 +35,6 @@ PonderV2 is a comprehensive 3D pre-training framework designed to facilitate the
 - *Oct. 2023*: **PonderV2** is released on [arXiv](https://arxiv.org/abs/2310.08586).
 
 ## Installation
-This repository is mainly based on [Pointcept](https://github.com/Pointcept/Pointcept).
-
 ### Requirements
 - Ubuntu: 18.04 or higher
 - CUDA: 11.3 or higher
