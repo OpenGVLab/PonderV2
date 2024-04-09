@@ -209,7 +209,13 @@ data = dict(
         render_semantic=True,
         num_cameras=num_cameras,
         transform=[
-            dict(type="CenterShift", apply_z=True),
+            dict(
+                type="CenterShift",
+                apply_z=True,
+                keys=[
+                    "extrinsic",
+                ],
+            ),
             dict(
                 type="RandomDropout",
                 dropout_ratio=0.8,
