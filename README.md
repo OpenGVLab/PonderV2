@@ -10,7 +10,8 @@
 
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/ponderv2-pave-the-way-for-3d-foundataion/semantic-segmentation-on-scannet)](https://paperswithcode.com/sota/semantic-segmentation-on-scannet?p=ponderv2-pave-the-way-for-3d-foundataion)<br>
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/ponderv2-pave-the-way-for-3d-foundataion/3d-semantic-segmentation-on-scannet200)](https://paperswithcode.com/sota/3d-semantic-segmentation-on-scannet200?p=ponderv2-pave-the-way-for-3d-foundataion)<br>
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/ponderv2-pave-the-way-for-3d-foundataion/semantic-segmentation-on-s3dis)](https://paperswithcode.com/sota/semantic-segmentation-on-s3dis?p=ponderv2-pave-the-way-for-3d-foundataion)
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/ponderv2-pave-the-way-for-3d-foundataion/semantic-segmentation-on-s3dis)](https://paperswithcode.com/sota/semantic-segmentation-on-s3dis?p=ponderv2-pave-the-way-for-3d-foundataion)<br>
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/ponderv2-pave-the-way-for-3d-foundataion/3d-semantic-segmentation-on-scannet-1)](https://paperswithcode.com/sota/3d-semantic-segmentation-on-scannet-1?p=ponderv2-pave-the-way-for-3d-foundataion)
 
 </div>
 
