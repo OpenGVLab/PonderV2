@@ -57,6 +57,16 @@ pip install git+https://github.com/openai/CLIP.git
 # refer https://github.com/traveller59/spconv
 pip install spconv-cu113
 
+# precise eval
+cd libs/pointops
+# usual
+python setup.py install
+# docker & multi GPU arch
+TORCH_CUDA_ARCH_LIST="ARCH LIST" python  setup.py install
+# e.g. 7.5: RTX 3000; 8.0: a100 More available in: https://developer.nvidia.com/cuda-gpus
+TORCH_CUDA_ARCH_LIST="7.5 8.0" python  setup.py install
+cd ../..
+
 # NeuS renderer
 cd libs/smooth-sampler
 # usual
