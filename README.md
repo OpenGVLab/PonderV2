@@ -29,6 +29,10 @@ PonderV2 is a comprehensive 3D pre-training framework designed to facilitate the
     <img src="assets/pipeline.png" alt="pipeline" width="800" />
 </p>
 
+## Important Notes:
+- PonderV2 indoor pre-training configs have bugs before [this commit](https://github.com/OpenGVLab/PonderV2/commit/82ad88a2afca30d7f9c5bd20957bba7c665d71fa), please make sure to use the fixed ones.
+- Structured3D RGB-D data preprocessing has bugs before [this commit](https://github.com/OpenGVLab/PonderV2/commit/1093eb6434b7618c60224d6a077e6f94546b6bbb), please re-generate the processed data if you have used the code before that.
+
 ## News:
 - *Dec. 2023*: **Checkpoint weights** are available in [model zoo](docs/model_zoo.md)!
 - *Dec. 2023*: **Multi-dataset training** supported! **More instructions** on installation and usage are available. Please check out!
