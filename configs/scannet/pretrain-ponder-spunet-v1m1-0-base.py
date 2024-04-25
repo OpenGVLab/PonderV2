@@ -1,6 +1,6 @@
 _base_ = ["../_base_/default_runtime.py"]
 
-num_gpu = 8
+num_gpu = 4
 max_point = 2000000
 
 # misc custom setting
@@ -147,6 +147,8 @@ model = dict(
         "otherfurniture",
     ),
     valid_index=(tuple(range(20)),),
+    ppt_loss_weight=1.0,
+    ppt_criteria=[dict(type="CrossEntropyLoss", loss_weight=1.0, ignore_index=-1)],
 )
 
 # scheduler settings
