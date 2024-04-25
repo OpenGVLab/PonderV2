@@ -159,3 +159,4 @@ data/
 .cache/
 data
 *.pth
+*.out

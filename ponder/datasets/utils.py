@@ -29,6 +29,9 @@ def collate_fn(batch, max_point=-1):
         for batch_id, data in enumerate(batch):
             num_coords = data["coord"].shape[0]
             if accum_num_points + num_coords > max_point:
+                print(
+                    "SKIP: accum_num_points", accum_num_points, "num_coords", num_coords
+                )
                 continue
             accum_num_points += num_coords
             ret_batches.append(data)

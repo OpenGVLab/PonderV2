@@ -233,6 +233,7 @@ class S3DISRGBDDataset(S3DISDataset):
 
         for i in range(len(rgbd_dicts)):
             if (rgbd_dicts[i]["depth_mask"]).mean() < 0.25:
+                os.rename(rgbd_paths[i], rgbd_paths[i] + ".bad")
                 return self.get_data(idx)
 
         name = (

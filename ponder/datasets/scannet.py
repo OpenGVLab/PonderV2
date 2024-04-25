@@ -302,6 +302,8 @@ class ScanNetRGBDDataset(Dataset):
             if os.path.exists(skip_file):
                 with open(skip_file, "r") as f:
                     for i in f.read().split("\n"):
+                        if not i:
+                            continue
                         scene_name, frame_idx = i.split()
                         skip_list.append((scene_name, int(frame_idx)))
 
