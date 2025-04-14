@@ -21,7 +21,7 @@
 </p>
 
 
-This is the official implementation of paper "PonderV2: Pave the Way for 3D Foundation Model with A Universal Pre-training Paradigm". 
+This is the official implementation of the T-PAMI 2025 paper "PonderV2: Pave the Way for 3D Foundation Model with A Universal Pre-training Paradigm". 
 
 PonderV2 is a comprehensive 3D pre-training framework designed to facilitate the acquisition of efficient 3D representations, thereby establishing a pathway to 3D foundational models. It is a novel universal paradigm to learn point cloud representations by differentiable neural rendering, serving as a bridge between 3D and 2D worlds. 
 
@@ -34,6 +34,7 @@ PonderV2 is a comprehensive 3D pre-training framework designed to facilitate the
 - Structured3D RGB-D data preprocessing has bugs before [this commit](https://github.com/OpenGVLab/PonderV2/commit/1093eb6434b7618c60224d6a077e6f94546b6bbb), please re-generate the processed data if you have used the code before that.
 
 ## News:
+- *Apr. 2025*: PonderV2 is accepted by **T-PAMI 2025**!
 - *Dec. 2023*: **Checkpoint weights** are available in [model zoo](docs/model_zoo.md)!
 - *Dec. 2023*: **Multi-dataset training** supported! **More instructions** on installation and usage are available. Please check out!
 - *Nov. 2023*: [**Model files**](./ponder/models/ponder/) are released! Usage instructions, complete codes and checkpoints are coming soon!
